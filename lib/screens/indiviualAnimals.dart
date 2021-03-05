@@ -50,6 +50,7 @@ class _IndividualState extends State<Individual> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
+
                             Container(
                               margin: EdgeInsets.symmetric(horizontal: 15,vertical: 8),
                               child: Column(
@@ -68,8 +69,8 @@ class _IndividualState extends State<Individual> {
                                         ),
                                       ),
 
-                                      widget.sex == "M" ?  Image.asset("assests/image/mars.png" , color:Color(0xffd5d5d5) ,height: 25, width: 25,) :
-                                      Image.asset("assests/image/venus.png" , color:Color(0xffd5d5d5) ,height: 30, width: 30,),
+                                      widget.sex == "MALE" ?  Image.asset("assets/image/mars.png" , color:Color(0xffd5d5d5) ,height: 25, width: 25,) :
+                                      Image.asset("assets/image/venus.png" , color:Color(0xffd5d5d5) ,height: 30, width: 30,),
                                     ],
                                   ),
                                   SizedBox(height: 5,),

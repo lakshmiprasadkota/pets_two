@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   List<Getanimals> animalsList = List();
   dynamic res;
   String name;
+  bool liked  = false;
 
   void getHttp() async {
     try {
@@ -37,7 +38,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     getHttp();
     super.initState();
+    liked =  liked;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 CircleAvatar(
                     backgroundColor: Color(0xff8ec5d9),
-                    backgroundImage: AssetImage("assests/image/woman.png"))
+                    backgroundImage: AssetImage("assets/image/woman.png"))
               ],
             ),
             Expanded(
@@ -136,113 +139,16 @@ class _HomePageState extends State<HomePage> {
                                 Getanimals todo = animalsList[index];
                                 String sx = "${todo.sex}";
                                 String age = "${todo.age}";
+                                String dist ="${todo.distance}";
                                 print(animalsList);
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 13, vertical: 13),
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Individual(
-                                                        name: todo.name,
-                                                        distance:
-                                                            "${todo.distance}",
-                                                        about: todo.description,
-                                                        age: age.substring(
-                                                          4,
-                                                        ),
-                                                        breed: todo.breed,
-                                                        img: todo.image,
-                                                        sex: "${sx[4].toUpperCase()}",
-                                                      )));
-                                        },
-                                        child: Container(
-                                          height: 105,
-                                          width: 105,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: todo.image != null ? NetworkImage(
-                                                    animalsList[index].image): Image.asset("assests\image\mars.png"),
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              todo.name,
-                                              style: TextStyle(
-                                                  color: Color(0xff454543),
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 16),
-                                            ),
-                                            SizedBox(height: 3,),
-                                            Text(
-                                                "${todo.breed}",
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: Color(0xffc0c0c0),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500),
-                                              ),
-                                            SizedBox(height: 3,),
-                                            Text(
-                                              "${sx[4].toUpperCase()}${sx.substring(5,).toLowerCase()}, "  "${age[4].toUpperCase()}${age.substring(5,).toLowerCase()}",
-
-
-                                              style: TextStyle(
-                                                  color: Color(0xffd0d0d0),
-                                                  fontSize: 12,
-                                              fontWeight: FontWeight.w500),
-                                            ),
-                                           SizedBox(height: 15,),
-                                           Row(
-                                             children: [
-                                               Icon(Icons.location_on_rounded, color: Color(0xffec7f66),size: 22,),
-                                               Text("${todo.distance} kms away" ,style: TextStyle(
-                                                 color: Color(0xffd0d0d0),
-                                                 fontSize: 12,
-                                                 fontWeight: FontWeight.w500
-                                               ),),
-                                             ],
-                                           )
-
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                          alignment: Alignment.topRight,
-                                          child: IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  name = todo.name;
-                                                });
-                                              },
-                                              icon: Icon(name != todo.name
-                                                  ? Icons.favorite_border
-                                                  : Icons.favorite , size: 26,color: name != todo.name? Color(0xffd8d8d8): Colors.red))),
-                                    ],
-                                  ),
+                                return ListReturn(
+                                  sex: sx,
+                                  age: age,
+                                  distance: dist,
+                                  name: todo.name,
+                                  breed: todo.breed,
+                                  image: todo.image,
+                                  description: todo.description,
                                 );
                               },
                               separatorBuilder: (context, index) {
@@ -257,6 +163,144 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class ListReturn extends StatefulWidget {
+  ListReturn({ this.name, this.image, this.distance, this.age, this.breed, this.sex, this.description,});
+  final String name;
+  final String breed;
+  final String sex;
+  final String distance;
+  final String image;
+  final String age;
+  final String description;
+  @override
+
+  _ListReturnState createState() => _ListReturnState();
+}
+
+class _ListReturnState extends State<ListReturn> {
+  bool liked = false;
+
+  _pressed() {
+    setState(() {
+      liked = !liked;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: 13, vertical: 13),
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20)),
+      child: Row(
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          Individual(
+                            name: widget.name,
+                            distance:
+                            "${widget.distance}",
+                            about: widget.description,
+                            age: widget.age.substring(
+                              4,
+                            ),
+                            breed: widget.breed,
+                            img: widget.image,
+                            sex: "${widget.sex.substring(4)}",
+                          )));
+            },
+            child: Container(
+              height: 105,
+              width: 105,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: widget.image != null ? NetworkImage(
+                        widget.image): AssetImage("assets\image\mars.png"),
+                  ),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(10))),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.name,
+                  style: TextStyle(
+                      color: Color(0xff454543),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16),
+                ),
+                SizedBox(height: 3,),
+                Text(
+                  "${widget.breed}",
+                  maxLines: 1,
+                  style: TextStyle(
+                      color: Color(0xffc0c0c0),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 3,),
+                // Text("${widget.sex}"  "${widget.sex}"),
+                Text(
+                  "${widget.sex[4].toUpperCase()}${widget.sex.substring(5,).toLowerCase()}, "  "${widget.age[4].toUpperCase()}${widget.age.substring(5,).toLowerCase()}",
+
+
+                  style: TextStyle(
+                      color: Color(0xffd0d0d0),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 15,),
+                Row(
+                  children: [
+                    Icon(Icons.location_on_rounded, color: Color(0xffec7f66),size: 22,),
+                    Text("${widget.distance} kms away" ,style: TextStyle(
+                        color: Color(0xffd0d0d0),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500
+                    ),),
+                  ],
+                )
+
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: () => _pressed(),
+    icon: Icon(
+    liked
+    ? Icons.favorite
+        : Icons.favorite_border,
+    size: 25,
+    color: liked
+    ? Color(0xFFF17E69)
+        : Colors.grey,
+    ),)),
+        ],
       ),
     );
   }
