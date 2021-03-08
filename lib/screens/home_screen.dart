@@ -1,10 +1,11 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pets_two/model/animals.dart';
-import 'package:pets_two/screens/indiviualAnimals.dart';
+import 'package:pets_two/model/get_animals_model.dart';
+import 'package:pets_two/network/base_network.dart';
+import 'package:pets_two/screens/individual_animals_screen.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,20 +17,25 @@ class _HomePageState extends State<HomePage> {
   dynamic res;
   String name;
   bool liked  = false;
+  bool fetching = true;
+     void getHttp() async {
 
-  void getHttp() async {
+
+    setState(() {
+      fetching = true;
+    });
     try {
       Response response =
-          await Dio().get("https://api.npoint.io/a145beb7c3963677dd5d");
+      await dioClient.ref.get("/5251edda932f79c3728b",
+      );
       setState(() {
         animalsList = getanimalsFromMap(jsonEncode(response.data));
-        res = response;
-
-        print(res);
+        fetching = false;
+        print(response);
       });
     } catch (e) {
       setState(() {
-        print("error ---> $e");
+        fetching = false;
       });
       print(e);
     }
@@ -44,6 +50,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (fetching) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (animalsList.length == 0) {
+      return Center(
+        child: Text("No Data"),
+      );
+    }
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 30),
@@ -131,31 +147,45 @@ class _HomePageState extends State<HomePage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+
                           ListView.separated(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: animalsList.length,
-                              itemBuilder: (context, index) {
-                                Getanimals todo = animalsList[index];
-                                String sx = "${todo.sex}";
-                                String age = "${todo.age}";
-                                String dist ="${todo.distance}";
-                                print(animalsList);
-                                return ListReturn(
-                                  sex: sx,
-                                  age: age,
-                                  distance: dist,
-                                  name: todo.name,
-                                  breed: todo.breed,
-                                  image: todo.image,
-                                  description: todo.description,
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 15,
-                                );
-                              }),
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: animalsList.length,
+                                itemBuilder: (context, index) {
+                                  Getanimals todo = animalsList[index];
+                                  String sx = "${todo.sex}";
+                                  String age = "${todo.age}";
+                                  String dist ="${todo.distance}";
+                                  print(animalsList);
+                                  return  InkWell(onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Individual(
+                                                  anm: animalsList[index],
+                                                )));
+                                  },
+                                    child: ListReturn(
+
+                                      fetching: fetching,
+                                      sex: sx,
+                                      age: age,
+                                      distance: dist,
+                                      name: todo.name,
+                                      breed: todo.breed,
+                                      image: todo.image,
+                                      description: todo.description,
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 15,
+                                  );
+                                }),
+
                         ],
                       ),
                     ),
@@ -170,7 +200,7 @@ class _HomePageState extends State<HomePage> {
 
 
 class ListReturn extends StatefulWidget {
-  ListReturn({ this.name, this.image, this.distance, this.age, this.breed, this.sex, this.description,});
+  ListReturn({ this.name, this.image, this.distance, this.age,this.fetching, this.breed, this.sex, this.description,});
   final String name;
   final String breed;
   final String sex;
@@ -178,6 +208,7 @@ class ListReturn extends StatefulWidget {
   final String image;
   final String age;
   final String description;
+  final bool fetching;
   @override
 
   _ListReturnState createState() => _ListReturnState();
@@ -186,6 +217,8 @@ class ListReturn extends StatefulWidget {
 class _ListReturnState extends State<ListReturn> {
   bool liked = false;
 
+
+
   _pressed() {
     setState(() {
       liked = !liked;
@@ -193,6 +226,7 @@ class _ListReturnState extends State<ListReturn> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Container(
       padding: EdgeInsets.symmetric(
           horizontal: 13, vertical: 13),
@@ -204,38 +238,18 @@ class _ListReturnState extends State<ListReturn> {
         crossAxisAlignment:
         CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          Individual(
-                            name: widget.name,
-                            distance:
-                            "${widget.distance}",
-                            about: widget.description,
-                            age: widget.age.substring(
-                              4,
-                            ),
-                            breed: widget.breed,
-                            img: widget.image,
-                            sex: "${widget.sex.substring(4)}",
-                          )));
-            },
-            child: Container(
+           Container(
               height: 105,
               width: 105,
               decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: widget.image != null ? NetworkImage(
-                        widget.image): AssetImage("assets\image\mars.png"),
+                    image: widget.image != null ?NetworkImage(widget.image) : AssetImage("assets\image\mars.png")
                   ),
                   borderRadius: BorderRadius.all(
                       Radius.circular(10))),
             ),
-          ),
+
           SizedBox(
             width: 10,
           ),

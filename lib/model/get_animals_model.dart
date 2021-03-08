@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 List<Getanimals> getanimalsFromMap(String str) => List<Getanimals>.from(json.decode(str).map((x) => Getanimals.fromMap(x)));

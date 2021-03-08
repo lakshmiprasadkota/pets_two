@@ -1,20 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pets_two/model/get_animals_model.dart';
 
 class Individual extends StatefulWidget {
-  Individual({this.name ,this.breed ,this.age, this.about, this.distance, this.img , this.sex});
-  final String name ;
- final String breed ;
- final String age ;
- final String distance ;
- final String about ;
- final String img ;
- final String sex;
+  Individual({ this.anm});
+
+ final Getanimals anm ;
   @override
   _IndividualState createState() => _IndividualState();
 }
 
 class _IndividualState extends State<Individual> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +58,7 @@ class _IndividualState extends State<Individual> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          widget.name,
+                                          widget.anm.name,
                                           style: TextStyle(
                                               color: Color(0xff3d3c3a),
                                               fontWeight: FontWeight.w700,
@@ -69,7 +66,7 @@ class _IndividualState extends State<Individual> {
                                         ),
                                       ),
 
-                                      widget.sex == "MALE" ?  Image.asset("assets/image/mars.png" , color:Color(0xffd5d5d5) ,height: 25, width: 25,) :
+                                      widget.anm.sex.toString().substring(4).toUpperCase() == "MALE" ?  Image.asset("assets/image/mars.png" , color:Color(0xffd5d5d5) ,height: 25, width: 25,) :
                                       Image.asset("assets/image/venus.png" , color:Color(0xffd5d5d5) ,height: 30, width: 30,),
                                     ],
                                   ),
@@ -79,7 +76,7 @@ class _IndividualState extends State<Individual> {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          widget.breed,
+                                          widget.anm.breed,
                                           maxLines: 1,
                                           style: TextStyle(
                                               color: Color(0xff6b6b6b),
@@ -88,7 +85,8 @@ class _IndividualState extends State<Individual> {
                                         ),
                                       ),
 
-                                      Text(widget.age ,style: TextStyle(
+                                      Text("${widget.anm.age.toString().substring(4,5).toUpperCase()}"
+                                          "${widget.anm.age.toString().substring(5).toLowerCase()}" ,style: TextStyle(
                                           color: Color(0xff6b6b6b),
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500),
@@ -98,7 +96,7 @@ class _IndividualState extends State<Individual> {
                                   SizedBox(height: 5,),
                                   Row(children: [
                                     Icon(Icons.location_on_rounded, color: Color(0xffec7f66),size: 22,),
-                                    Text("${widget.distance} kms away" ,style: TextStyle(
+                                    Text("${widget.anm.distance} kms away" ,style: TextStyle(
                                         color: Color(0xffd1d1d1),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500
@@ -116,7 +114,7 @@ class _IndividualState extends State<Individual> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: NetworkImage(
-                                        widget.img),
+                                        widget.anm.image),
                                   ),
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(10))),
@@ -126,8 +124,9 @@ class _IndividualState extends State<Individual> {
                                 alignment: Alignment.topLeft,
                                 child: Text("About",style: TextStyle(color: Color(0xff393937),fontSize: 18,fontWeight: FontWeight.w700),)),
                             Container(
+                              padding: EdgeInsets.only(bottom: 70),
                               margin: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(widget.about , style: TextStyle(
+                              child: Text(widget.anm.description , style: TextStyle(
                                   color: Color(0xff727272),
                                   fontWeight:FontWeight.w400
                               ),
