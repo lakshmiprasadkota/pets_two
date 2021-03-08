@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pets_two/model/get_animals_model.dart';
+import 'package:pets_two/model/animals_model.dart';
 
 class Individual extends StatefulWidget {
   Individual({ this.animalsRefVar});
