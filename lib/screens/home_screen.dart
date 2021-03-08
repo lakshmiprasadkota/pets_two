@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 Individual(
-                                                  anm: animalsList[index],
+                                                  animalsRefVar: animalsList[index],
                                                 )));
                                   },
                                     child: ListReturn(
